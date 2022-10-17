@@ -21,6 +21,20 @@ Python program for listing the VMs on an ESX / vCenter host
 import re
 from pyVmomi import vmodl, vim
 from tools import cli, service_instance
+import urllib3
+
+urllib3.disable_warnings() 
+
+import ssl
+
+try:
+  _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+# Legacy Python that doesn't verify HTTPS certificates by default
+  pass
+else:
+# Handle target environment that doesn't support HTTPS verification
+  ssl._create_default_https_context = _create_unverified_https_context
 
 
 def print_vm_info(virtual_machine):
@@ -59,6 +73,7 @@ def main():
     """
     Simple command-line program for listing the virtual machines on a system.
     """
+
 
     parser = cli.Parser()
     parser.add_custom_argument('-f', '--find', required=False,
